@@ -6,7 +6,7 @@ from pathlib import Path
 from pathlib import Path as _Path
 from dotenv import load_dotenv
 
-load_dotenv()
+load_dotenv(override=True)
 
 from prompts.agent_prompt import all_nasdaq_100_symbols
 # Import tools and prompts
