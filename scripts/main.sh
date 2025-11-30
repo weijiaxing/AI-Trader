@@ -5,7 +5,7 @@
 
 set -e  # 遇到错误时退出
 
-echo "🚀 Launching AI Trader Environment..."
+echo "🚀 启动 AI Trader 环境 Launching AI Trader Environment..."
 
 # Get the project root directory (parent of scripts/)
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
@@ -13,13 +13,13 @@ PROJECT_ROOT="$( cd "$SCRIPT_DIR/.." && pwd )"
 
 cd "$PROJECT_ROOT"
 
-echo "📊 Now getting and merging price data..."
+echo "📊 正在获取并合并价格数据 Getting and merging price data..."
 cd data
 python get_daily_price.py
 python merge_jsonl.py
 cd ..
 
-echo "🔧 Now starting MCP services..."
+echo "🔧 正在启动 MCP 服务 Starting MCP services..."
 cd agent_tools
 python start_mcp_services.py
 cd ..
@@ -27,13 +27,13 @@ cd ..
 #waiting for MCP services to start
 sleep 2
 
-echo "🤖 Now starting the main trading agent..."
+echo "🤖 正在启动主交易代理 Starting the main trading agent..."
 python main.py configs/default_config.json
 
-echo "✅ AI-Trader stopped"
+echo "✅ AI-Trader 已停止 AI-Trader stopped"
 
-echo "🔄 Starting web server..."
+echo "🔄 启动 Web 服务器 Starting web server..."
 cd docs
 python3 -m http.server 8888
 
-echo "✅ Web server started"
+echo "✅ Web 服务器已启动 Web server started"

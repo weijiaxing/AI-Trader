@@ -8,9 +8,9 @@ PROJECT_ROOT="$( cd "$SCRIPT_DIR/.." && pwd )"
 
 cd "$PROJECT_ROOT"
 
-echo "🌐 Starting Web UI server..."
+echo "🌐 正在启动 Web UI 服务器 Starting Web UI server..."
 echo ""
-echo "Press Ctrl+C to stop the server"
+echo "按 Ctrl+C 停止服务器 Press Ctrl+C to stop the server"
 echo ""
 
 cd docs

@@ -9,6 +9,7 @@ PROJECT_ROOT="$( cd "$SCRIPT_DIR/.." && pwd )"
 cd "$PROJECT_ROOT"
 
 cd data/A_stock
+echo "📊 准备A股数据 Preparing A-stock data..."
 
 # for alphavantage
 python get_daily_price_alphavantage.py

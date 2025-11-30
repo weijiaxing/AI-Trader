@@ -6,8 +6,8 @@ PROJECT_ROOT="$( cd "$SCRIPT_DIR/.." && pwd )"
 
 cd "$PROJECT_ROOT"
 
-echo "🤖 Now starting the cryptocurrencies trading agent..."
+echo "🤖 正在启动加密货币交易代理 Starting the cryptocurrencies trading agent..."
 
 python main.py configs/default_crypto_config.json 
 
-echo "✅ AI-Trader 已停止"
+echo "✅ AI-Trader 已停止 AI-Trader stopped"

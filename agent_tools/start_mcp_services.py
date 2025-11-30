@@ -52,7 +52,7 @@ class MCPServiceManager:
 
     def signal_handler(self, signum, frame):
         """Handle interrupt signals"""
-        print("\n🛑 Received stop signal, shutting down all services...")
+        print("\n🛑 收到停止信号，正在关闭所有服务... | Received stop signal, shutting down all services...")
         self.stop_all_services()
         sys.exit(0)
 
@@ -78,13 +78,13 @@ class MCPServiceManager:
                 conflicts.append((config["name"], port))
 
         if conflicts:
-            print("⚠️  Port conflicts detected:")
+            print("⚠️  检测到端口冲突 | Port conflicts detected:")
             for name, port in conflicts:
-                print(f"   - {name}: Port {port} is already in use")
+                print(f"   - {name}: 端口 {port} 已被占用 | Port {port} is already in use")
 
             import socket
 
-            response = input("\n❓ Do you want to automatically find available ports? (y/n): ")
+            response = input("\n❓ 是否自动查找可用端口？| Do you want to automatically find available ports? (y/n): ")
             if response.lower() == "y":
                 for service_id, config in self.service_configs.items():
                     port = config["port"]
@@ -94,14 +94,14 @@ class MCPServiceManager:
                         while not self.is_port_available(new_port):
                             new_port += 1
                             if new_port > port + 100:  # Limit search range
-                                print(f"❌ Could not find available port for {config['name']}")
+                                print(f"❌ 无法为 {config['name']} 找到可用端口 | Could not find available port for {config['name']}")
                                 return False
-                        print(f"   ✅ {config['name']}: Changed port from {port} to {new_port}")
+                        print(f"   ✅ {config['name']}: 端口从 {port} 更改为 {new_port} | Changed port from {port} to {new_port}")
                         config["port"] = new_port
                         self.ports[service_id] = new_port
                 return True
             else:
-                print("\n💡 Tip: Stop the conflicting services or change port configuration")
+                print("\n💡 提示：停止冲突的服务或更改端口配置 | Tip: Stop the conflicting services or change port configuration")
                 return False
         return True
 
@@ -112,7 +112,7 @@ class MCPServiceManager:
         port = config["port"]
 
         if not Path(script_path).exists():
-            print(f"❌ Script file not found: {script_path}")
+            print(f"❌ 脚本文件未找到 | Script file not found: {script_path}")
             return False
 
         try:
@@ -125,11 +125,11 @@ class MCPServiceManager:
 
             self.services[service_id] = {"process": process, "name": service_name, "port": port, "log_file": log_file}
 
-            print(f"✅ {service_name} service started (PID: {process.pid}, Port: {port})")
+            print(f"✅ {service_name} 服务已启动 | {service_name} service started (PID: {process.pid}, Port: {port})")
             return True
 
         except Exception as e:
-            print(f"❌ Failed to start {service_name} service: {e}")
+            print(f"❌ 启动 {service_name} 服务失败 | Failed to start {service_name} service: {e}")
             return False
 
     def check_service_health(self, service_id):
@@ -159,19 +159,19 @@ class MCPServiceManager:
 
     def start_all_services(self):
         """Start all services"""
-        print("🚀 Starting MCP services...")
+        print("🚀 正在启动 MCP 服务... | Starting MCP services...")
         print("=" * 50)
 
         # Check for port conflicts
         if not self.check_port_conflicts():
-            print("\n❌ Cannot start services due to port conflicts")
+            print("\n❌ 由于端口冲突无法启动服务 | Cannot start services due to port conflicts")
             return
 
-        print(f"\n📊 Port configuration:")
+        print(f"\n📊 端口配置 | Port configuration:")
         for service_id, config in self.service_configs.items():
             print(f"  - {config['name']}: {config['port']}")
 
-        print("\n🔄 Starting services...")
+        print("\n🔄 正在启动服务... | Starting services...")
 
         # Start all services
         success_count = 0
@@ -180,24 +180,24 @@ class MCPServiceManager:
                 success_count += 1
 
         if success_count == 0:
-            print("\n❌ No services started successfully")
+            print("\n❌ 没有服务启动成功 | No services started successfully")
             return
 
         # Wait for services to start
-        print("\n⏳ Waiting for services to start...")
+        print("\n⏳ 等待服务启动... | Waiting for services to start...")
         time.sleep(3)
 
         # Check service status
-        print("\n🔍 Checking service status...")
+        print("\n🔍 检查服务状态... | Checking service status...")
         healthy_count = self.check_all_services()
 
         if healthy_count > 0:
-            print(f"\n🎉 {healthy_count}/{len(self.services)} MCP services running!")
+            print(f"\n🎉 {healthy_count}/{len(self.services)} 个 MCP 服务正在运行！| {healthy_count}/{len(self.services)} MCP services running!")
             self.print_service_info()
             # Keep running
             self.keep_alive()
         else:
-            print("\n❌ All services failed to start properly")
+            print("\n❌ 所有服务启动失败 | All services failed to start properly")
             self.stop_all_services()
 
     def check_all_services(self):
@@ -205,21 +205,21 @@ class MCPServiceManager:
         healthy_count = 0
         for service_id, service in self.services.items():
             if self.check_service_health(service_id):
-                print(f"✅ {service['name']} service running normally")
+                print(f"✅ {service['name']} 服务运行正常 | {service['name']} service running normally")
                 healthy_count += 1
             else:
-                print(f"❌ {service['name']} service failed to start")
-                print(f"   Please check logs: {service['log_file']}")
+                print(f"❌ {service['name']} 服务启动失败 | {service['name']} service failed to start")
+                print(f"   请检查日志 | Please check logs: {service['log_file']}")
         return healthy_count
 
     def print_service_info(self):
         """Print service information"""
-        print("\n📋 Service information:")
+        print("\n📋 服务信息 | Service information:")
         for service_id, service in self.services.items():
             print(f"  - {service['name']}: http://localhost:{service['port']} (PID: {service['process'].pid})")
 
-        print(f"\n📁 Log files location: {self.log_dir.absolute()}")
-        print("\n🛑 Press Ctrl+C to stop all services")
+        print(f"\n📁 日志文件位置 | Log files location: {self.log_dir.absolute()}")
+        print("\n🛑 按 Ctrl+C 停止所有服务 | Press Ctrl+C to stop all services")
 
     def keep_alive(self):
         """Keep services running"""
@@ -234,12 +234,12 @@ class MCPServiceManager:
                         stopped_services.append(service["name"])
 
                 if stopped_services:
-                    print(f"\n⚠️  Following service(s) stopped unexpectedly: {', '.join(stopped_services)}")
-                    print(f"📋 Active services: {len(self.services) - len(stopped_services)}/{len(self.services)}")
+                    print(f"\n⚠️  以下服务意外停止 | Following service(s) stopped unexpectedly: {', '.join(stopped_services)}")
+                    print(f"📋 活跃服务 | Active services: {len(self.services) - len(stopped_services)}/{len(self.services)}")
 
                     # Only stop all if all services have failed
                     if len(stopped_services) == len(self.services):
-                        print("❌ All services have stopped, shutting down...")
+                        print("❌ 所有服务已停止，正在关闭... | All services have stopped, shutting down...")
                         self.running = False
                         break
 
@@ -250,35 +250,35 @@ class MCPServiceManager:
 
     def stop_all_services(self):
         """Stop all services"""
-        print("\n🛑 Stopping all services...")
+        print("\n🛑 正在停止所有服务... | Stopping all services...")
 
         for service_id, service in self.services.items():
             try:
                 service["process"].terminate()
                 service["process"].wait(timeout=5)
-                print(f"✅ {service['name']} service stopped")
+                print(f"✅ {service['name']} 服务已停止 | {service['name']} service stopped")
             except subprocess.TimeoutExpired:
                 service["process"].kill()
-                print(f"🔨 {service['name']} service force stopped")
+                print(f"🔨 {service['name']} 服务已强制停止 | {service['name']} service force stopped")
             except Exception as e:
-                print(f"❌ Error stopping {service['name']} service: {e}")
+                print(f"❌ 停止 {service['name']} 服务时出错 | Error stopping {service['name']} service: {e}")
 
-        print("✅ All services stopped")
+        print("✅ 所有服务已停止 | All services stopped")
 
     def status(self):
         """Display service status"""
-        print("📊 MCP Service Status Check")
+        print("📊 MCP 服务状态检查 | MCP Service Status Check")
         print("=" * 30)
 
         for service_id, config in self.service_configs.items():
             if service_id in self.services:
                 service = self.services[service_id]
                 if self.check_service_health(service_id):
-                    print(f"✅ {config['name']} service running normally (Port: {config['port']})")
+                    print(f"✅ {config['name']} 服务运行正常 | {config['name']} service running normally (Port: {config['port']})")
                 else:
-                    print(f"❌ {config['name']} service abnormal (Port: {config['port']})")
+                    print(f"❌ {config['name']} 服务异常 | {config['name']} service abnormal (Port: {config['port']})")
             else:
-                print(f"❌ {config['name']} service not started (Port: {config['port']})")
+                print(f"❌ {config['name']} 服务未启动 | {config['name']} service not started (Port: {config['port']})")
 
 
 def main():

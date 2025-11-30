@@ -6,7 +6,7 @@ PROJECT_ROOT="$( cd "$SCRIPT_DIR/.." && pwd )"
 
 cd "$PROJECT_ROOT"
 
-echo "🔧 正在启动 MCP 服务..."
+echo "🔧 正在启动 MCP 服务 Starting MCP services..."
 cd agent_tools
 python start_mcp_services.py
 cd ..

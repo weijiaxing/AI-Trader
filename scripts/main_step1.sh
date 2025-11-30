@@ -9,6 +9,7 @@ PROJECT_ROOT="$( cd "$SCRIPT_DIR/.." && pwd )"
 cd "$PROJECT_ROOT"
 
 cd data
+echo "📊 准备数据 Preparing data..."
 # python get_daily_price.py #run daily price data
 python get_interdaily_price.py #run interdaily price data
 python merge_jsonl.py
