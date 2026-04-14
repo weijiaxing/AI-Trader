@@ -612,9 +612,38 @@ def get_price_from_market(
         return None
 
 
+def _get_us_stock_global_quote(symbol: str) -> Optional[float]:
+    """获取美股全局报价 (Global Quote) 作为休市期间的回退方案"""
+    params = {
+        "function": "GLOBAL_QUOTE",
+        "symbol": symbol,
+        "apikey": ALPHA_VANTAGE_API_KEY
+    }
+    try:
+        data = _request_json_with_retry(
+            "alphavantage",
+            "GET",
+            BASE_URL,
+            params=params,
+        )
+        quote = data.get("Global Quote", {})
+        price_str = quote.get("05. price")
+        if price_str:
+            return float(price_str)
+    except Exception as e:
+        print(f"[Price API] Global Quote exception for {symbol}: {e}")
+    return None
+
+
 def _get_us_stock_price(symbol: str, executed_at: str) -> Optional[float]:
     """获取美股价格"""
-    # Alpha Vantage TIME_SERIES_INTRADAY 返回美国东部时间 (ET)
+    # 尝试先获取 Global Quote (对休市更友好)
+    price = _get_us_stock_global_quote(symbol)
+    if price is not None:
+        print(f"[Price API] Found Global Quote for {symbol}: ${price}")
+        return price
+
+    # 如果 Global Quote 失败，回退到历史分时数据
     try:
         # 先解析为 UTC
         dt_utc = datetime.fromisoformat(executed_at.replace('Z', '')).replace(tzinfo=UTC)
