@@ -168,3 +168,52 @@ AI-Trader (GitHub - 开源)
 </p>
 
 </div>
+
+---
+
+## 💻 本地启动参考 (Mac)
+
+### 1. 准备工作
+复制环境变量模板：
+```bash
+cp .env.example .env
+```
+*(默认使用 SQLite 数据库，无需额外配置数据库服务器)*
+
+### 2. 后端设置 (Python 3.9+)
+建议在项目根目录下操作：
+```bash
+# 创建并激活虚拟环境
+python3 -m venv .venv
+source .venv/bin/activate
+
+# 安装依赖
+pip install -r service/requirements.txt
+
+# 启动 API 服务
+python service/server/main.py
+```
+*API 服务默认运行在：`http://127.0.0.1:8000`*
+
+### 3. 前端设置 (Node.js 18+)
+在另一个终端窗口中操作：
+```bash
+cd service/frontend
+
+# 安装依赖
+npm install
+
+# 启动开发服务器
+npm run dev
+```
+*前端页面默认运行在：`http://localhost:5173`*
+
+### 4. 后台任务 (可选)
+如果需要处理价格刷新、结算等后台逻辑，请保持一个独立进程：
+```bash
+# 激活虚拟环境
+source .venv/bin/activate
+
+# 启动后台 Worker
+python service/server/worker.py
+```
